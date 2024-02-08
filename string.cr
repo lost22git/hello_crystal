@@ -105,7 +105,7 @@ find /(\w+\-?\w+),(\w+\-?\w+),(\w+\-?\w+)/, in: text do |m|
   puts "[#{m.begin(1)},#{m.end(1)}) => #{m[1]}"
   puts "[#{m.begin(2)},#{m.end(2)}) => #{m[2]}"
   puts "[#{m.begin(3)},#{m.end(3)}) => #{m[3]}"
-  puts "-"*40
+  puts "-" * 40
 end
 
 def find(pattern : Regex, *, in text : String, &)
