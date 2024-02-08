@@ -117,3 +117,10 @@ p! book
 p! ABookClass.static_title
 p! book.is_a? BookClass
 p! book.is_a? ABookClass
+
+__ "反射"
+
+p! "你好".is_a? String
+p! "你好".responds_to? :split # 检查是否有 split 方法
+p! "你好".nil?
+p! typeof("你好")
