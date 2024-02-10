@@ -42,6 +42,7 @@ end
 book = BookClass.new "《史记》", ["历史", "中国"], 66.6
 p! book
 p! book.is_a? BookClass
+p! book.object_id
 
 __ "类方法和类变量"
 
