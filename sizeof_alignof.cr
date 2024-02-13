@@ -143,6 +143,9 @@ record UserRecord,
 
 p! sizeof(UserRecord) # (id 4 + padding 4) + name 8 + (balance 4 + padding 4)
 p! alignof(UserRecord)
+p! offsetof(UserRecord, @id)
+p! offsetof(UserRecord, @name)
+p! offsetof(UserRecord, @balance)
 
 __ "Packed struct"
 
@@ -168,8 +171,11 @@ end
 
 p! sizeof(UserClass) # ptr
 p! alignof(UserClass)
-p! instance_sizeof(UserClass) # (id 4 + padding 4) + name 8 + (balance 4 + padding 4)
+p! instance_sizeof(UserClass) # TYPEID 4 + id 4 + name 8 + (balance 4 + padding 4)
 p! instance_alignof(UserClass)
+p! offsetof(UserClass, @id)
+p! offsetof(UserClass, @name)
+p! offsetof(UserClass, @balance)
 
 __ "Pointer (Value Type)"
 
