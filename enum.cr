@@ -15,20 +15,23 @@ enum Color
   Blue  # 4
 end
 
+# enum <=> Int
 p! Color::Red.value
 p! Color.from_value(1)
 p! Color.from_value?(100)
 p! Color.new(1)
+p! Color.valid? Color.new(100)
+
+# enum <=> String
+p! Color.parse("Green")
+p! Color.parse?("Greeeeen")
+p! Color::Green.to_s
+p! (Color::Red | Color::Blue).to_s
 
 p! typeof(Color::Red | Color::Blue)
 p! (Color::Red | Color::Blue).value
 p! (Color::Red | Color::Blue).includes? Color::Blue
 p! (Color::Red | Color::Blue).red?
-
-p! Color.parse("Green")
-p! Color.parse?("Greeeeen")
-p! Color::Green.to_s
-p! (Color::Red | Color::Blue).to_s
 
 Color.each do |c, v|
   p "#{c} => #{v}"
