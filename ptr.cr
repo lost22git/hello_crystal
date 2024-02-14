@@ -2,11 +2,11 @@
 
 def __(t : String)
   puts ""
-  puts "------\e[1;33m " + t + " \e[m" + ("-" * (50 - 8 - t.size))
+  puts "------\e[1;33m " + t + " \e[m" + ("-" * (60 - 8 - t.size))
   puts ""
 end
 
-__ "referenced ptr"
+__ "pointer"
 
 class Book
   property name : String
@@ -30,3 +30,34 @@ p! book.object_id == book.as(Pointer(Book)).address
 p! Pointer(Float32).new(book.unsafe_as(UInt64) + offsetof(Book, @price)).value
 Pointer(Float32).new(book.unsafe_as(UInt64) + offsetof(Book, @price)).value = 33
 p! Pointer(Float32).new(book.unsafe_as(UInt64) + offsetof(Book, @price)).value
+
+#
+# Slice
+#
+# - bound check 版本的 Pointer
+# - unsafe: 会有悬空指针的问题
+# - Value type: 包含以下三个字段
+#   - size : UInt32
+#   - read_only : Bool
+#   - pointer : Pointer(T)
+#
+
+__ "Slice is unsafe when pointer to stack memory"
+
+def get_slice_pointer_to_stack
+  a = StaticArray[1]
+  a.to_slice
+end
+
+b = get_slice_pointer_to_stack
+p! b    # dangling pointer !!!
+p! b[0] # 0
+
+def get_slice_pointer_to_heap
+  a = IO::Memory.new
+  a << "hello"
+  a.to_slice
+end
+
+b = get_slice_pointer_to_heap
+p! String.new b # ok, "hello"
