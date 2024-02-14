@@ -123,14 +123,6 @@ p! offsetof(Range(Int32, Int32), @begin)
 p! offsetof(Range(Int32, Int32), @end)
 p! offsetof(Range(Int32, Int32), @exclusive)
 
-__ "Slice (Value Type)"
-
-p! sizeof(Slice(String)) # size 4 + ( read_only 1 + padding 3 ) + ptr 8
-p! alignof(Slice(String))
-p! offsetof(Slice(String), @size)
-p! offsetof(Slice(String), @read_only)
-p! offsetof(Slice(String), @pointer)
-
 __ "Enum (Value Type)"
 
 enum Lang
@@ -218,6 +210,14 @@ __ "Pointer (Value Type)"
 
 p! sizeof(Pointer(String))
 p! alignof(Pointer(String))
+
+__ "Slice (Value Type)"
+
+p! sizeof(Slice(String)) # size 4 + ( read_only 1 + padding 3 ) + ptr 8
+p! alignof(Slice(String))
+p! offsetof(Slice(String), @size)
+p! offsetof(Slice(String), @read_only)
+p! offsetof(Slice(String), @pointer)
 
 __ "Proc (Value Type)"
 p! sizeof(Proc(String, String))

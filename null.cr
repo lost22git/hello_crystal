@@ -12,6 +12,7 @@ p! a.try &.upcase
 
 a = nil
 p! a
+# p! a.not_nil!  # raise NilAssertionError
 p! a.try &.upcase || "world"
 
 # if not-nil => if true
