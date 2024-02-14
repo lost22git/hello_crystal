@@ -97,7 +97,7 @@ p! alignof(Range(Int32, Int32))
 
 __ "Slice (Value Type)"
 
-p! sizeof(Slice(String)) # ptr + len
+p! sizeof(Slice(String)) # size 4 + ( read_only 1 + padding 3 ) + ptr 8
 p! alignof(Slice(String))
 
 __ "Enum (Value Type)"
