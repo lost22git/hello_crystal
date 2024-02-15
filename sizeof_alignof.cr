@@ -1,5 +1,7 @@
 #!/usr/bin/env crystal
 
+require "spec"
+
 def __(t : String)
   puts ""
   puts "------\e[1;33m " + t + " \e[m" + ("-" * (50 - 8 - t.size))
@@ -14,116 +16,121 @@ end
 # - offsetof: 查看 field 在 type 中内存偏移量
 #
 
-__ "primitive types (Value Type)"
+describe "Test" do
+  it "primitive types (Value Type)" do
+    sizeof(Bool).should eq 1
+    alignof(Bool).should eq 1
 
-p! sizeof(Bool)
-p! alignof(Bool)
+    sizeof(Char).should eq 4 # UTF-8 4
+    alignof(Char).should eq 4
 
-p! sizeof(Char) # UTF-8 4
-p! alignof(Char)
+    sizeof(Int).should eq 24
+    alignof(Int).should eq 8
 
-p! sizeof(Int)
-p! alignof(Int)
+    sizeof(Int32).should eq 4
+    alignof(Int32).should eq 4
+    sizeof(UInt32).should eq 4
+    alignof(UInt32).should eq 4
 
-p! sizeof(Int32)
-p! alignof(Int32)
-p! sizeof(UInt32)
-p! alignof(UInt32)
+    sizeof(Int8).should eq 1
+    alignof(Int8).should eq 1
+    sizeof(UInt8).should eq 1
+    alignof(UInt8).should eq 1
 
-p! sizeof(Int8)
-p! alignof(Int8)
-p! sizeof(UInt8)
-p! alignof(UInt8)
+    sizeof(Int16).should eq 2
+    alignof(Int16).should eq 2
+    sizeof(UInt16).should eq 2
+    alignof(UInt16).should eq 2
 
-p! sizeof(Int16)
-p! alignof(Int16)
-p! sizeof(UInt16)
-p! alignof(UInt16)
+    sizeof(Int64).should eq 8
+    alignof(Int64).should eq 8
+    sizeof(UInt64).should eq 8
+    alignof(UInt64).should eq 8
 
-p! sizeof(Int64)
-p! alignof(Int64)
-p! sizeof(UInt64)
-p! alignof(UInt64)
+    sizeof(Int128).should eq 16
+    alignof(Int128).should eq 8
+    sizeof(UInt128).should eq 16
+    alignof(UInt128).should eq 8
 
-p! sizeof(Int128)
-p! alignof(Int128)
-p! sizeof(UInt128)
-p! alignof(UInt128)
+    sizeof(Float).should eq 16
+    alignof(Float).should eq 8
+    sizeof(Float32).should eq 4
+    alignof(Float32).should eq 4
+    sizeof(Float64).should eq 8
+    alignof(Float64).should eq 8
+  end
 
-p! sizeof(Float)
-p! alignof(Float)
-p! sizeof(Float32)
-p! alignof(Float32)
-p! sizeof(Float64)
-p! alignof(Float64)
+  it "String (Reference Type)" do
+    sizeof(String).should eq 8 # ptr
+    alignof(String).should eq 8
+    instance_sizeof(String).should eq 16 # TYPEID 4 + bytesize 4 + length 4 + c bytesize
+    instance_alignof(String).should eq 4
+    offsetof(String, @bytesize).should eq 4
+    offsetof(String, @length).should eq 8
+    offsetof(String, @c).should eq 12
+  end
 
-__ "String (Reference Type)"
+  it "Array (Reference Type)" do
+    sizeof(Array(Int32)).should eq 8 # ptr
+    alignof(Array(Int32)).should eq 8
+    instance_sizeof(Array(Int32)).should eq 24 # TYPEID 4 + size 4 + capacity 4 + offset_to_buffer 4 + buffer 8
+    instance_alignof(Array(Int32)).should eq 8
+    offsetof(Array(Int32), @size).should eq 4
+    offsetof(Array(Int32), @capacity).should eq 8
+    offsetof(Array(Int32), @offset_to_buffer).should eq 12
+    offsetof(Array(Int32), @buffer).should eq 16
+  end
 
-p! sizeof(String) # ptr
-p! alignof(String)
-p! instance_sizeof(String)  # TYPEID 4 + bytesize 4 + length 4 + c bytesize
-p! instance_alignof(String) # 4
-p! offsetof(String, @bytesize)
-p! offsetof(String, @length)
-p! offsetof(String, @c)
+  it "StaticArray (Value Type)" do
+    sizeof(StaticArray(Int32, 2)).should eq 8 # 4 * 2
+    alignof(StaticArray(Int32, 2)).should eq 4
+  end
 
-__ "Array (Reference Type)"
+  it "Hash (Reference Type)" do
+    sizeof(Hash(String, Int32)).should eq 8 # ptr
+    alignof(Hash(String, Int32)).should eq 8
+    instance_sizeof(Hash(String, Int32)).should eq 56 # TYPEID 4 + first 4 + entries 8 + indices 8 + size 4 + deleted_count 4 + indices_bytesize 1 + indices_size_pow2 1 + compare_by_identity 1 + padding 5 + block 16
+    instance_alignof(Hash(String, Int32)).should eq 8
+    offsetof(Hash(String, Int32), @first).should eq 4
+    offsetof(Hash(String, Int32), @entries).should eq 8
+    offsetof(Hash(String, Int32), @indices).should eq 16
+    offsetof(Hash(String, Int32), @size).should eq 24
+    offsetof(Hash(String, Int32), @deleted_count).should eq 28
+    offsetof(Hash(String, Int32), @indices_bytesize).should eq 32
+    offsetof(Hash(String, Int32), @indices_size_pow2).should eq 33
+    offsetof(Hash(String, Int32), @compare_by_identity).should eq 34
+    offsetof(Hash(String, Int32), @block).should eq 40
+  end
 
-p! sizeof(Array(Int32)) # ptr
-p! alignof(Array(Int32))
-p! instance_sizeof(Array(Int32)) # TYPEID 4 + size 4 + capacity 4 + offset_to_buffer 4 + buffer 8
-p! instance_alignof(Array(Int32))
-p! offsetof(Array(Int32), @size)
-p! offsetof(Array(Int32), @capacity)
-p! offsetof(Array(Int32), @offset_to_buffer)
-p! offsetof(Array(Int32), @buffer)
+  it "Set (Value Type)" do
+    sizeof(Set(String)).should eq 8 # ptr to Hash(String,Nil)
+    alignof(Set(String)).should eq 8
+    offsetof(Set(String), @hash).should eq 0
+  end
 
-__ "StaticArray (Value Type)"
+  it "Tuple (Value Type)" do
+    sizeof(Tuple(Int32, Int32, Int32)).should eq 12 # 4 * 3
+    alignof(Tuple(Int32, Int32, Int32)).should eq 4
+  end
 
-p! sizeof(StaticArray(Int32, 2)) # 4 * 2
-p! alignof(StaticArray(Int32, 2))
+  it "NamedTuple (Value Type)" do
+    sizeof(NamedTuple(name: String, age: UInt8)).should eq 16 # name 8 + age 1 + padding 7
+    alignof(NamedTuple(name: String, age: UInt8)).should eq 8
+  end
 
-__ "Hash (Reference Type)"
+  it "Range (Value Type)" do
+    sizeof(Range(Int32, Int32)).should eq 12 # begin 4 + end 4 + exclusive 1 + padding 3
+    alignof(Range(Int32, Int32)).should eq 4
+    offsetof(Range(Int32, Int32), @begin).should eq 0
+    offsetof(Range(Int32, Int32), @end).should eq 4
+    offsetof(Range(Int32, Int32), @exclusive).should eq 8
+  end
 
-p! sizeof(Hash(String, Int32)) # ptr
-p! alignof(Hash(String, Int32))
-p! instance_sizeof(Hash(String, Int32)) # TYPEID 4 + first 4 + entries 8 + indices 8 + size 4 + deleted_count 4 + indices_bytesize 1 + indices_size_pow2 1 + compare_by_identity 1 + padding 5 + block 16
-p! instance_alignof(Hash(String, Int32))
-p! offsetof(Hash(String, Int32), @first)
-p! offsetof(Hash(String, Int32), @entries)
-p! offsetof(Hash(String, Int32), @indices)
-p! offsetof(Hash(String, Int32), @size)
-p! offsetof(Hash(String, Int32), @deleted_count)
-p! offsetof(Hash(String, Int32), @indices_bytesize)
-p! offsetof(Hash(String, Int32), @indices_size_pow2)
-p! offsetof(Hash(String, Int32), @compare_by_identity)
-p! offsetof(Hash(String, Int32), @block)
-
-__ "Set (Value Type)"
-
-p! sizeof(Set(String)) # ptr to Hash(String,Nil)
-p! alignof(Set(String))
-p! offsetof(Set(String), @hash)
-
-__ "Tuple (Value Type)"
-
-p! sizeof(Tuple(Int32, Int32, Int32)) # 4 * 3
-p! alignof(Tuple(Int32, Int32, Int32))
-
-__ "NamedTuple (Value Type)"
-
-p! sizeof(NamedTuple(name: String, age: UInt8)) # name 8 + age 1 + padding 7
-p! alignof(NamedTuple(name: String, age: UInt8))
-
-__ "Range (Value Type)"
-
-p! sizeof(Range(Int32, Int32)) # begin 4 + end 4 + exclusive 1 + padding 3
-p! alignof(Range(Int32, Int32))
-p! offsetof(Range(Int32, Int32), @begin)
-p! offsetof(Range(Int32, Int32), @end)
-p! offsetof(Range(Int32, Int32), @exclusive)
-
-__ "Enum (Value Type)"
+  it "Proc (Value Type)" do
+    sizeof(Proc(String, String)).should eq 16
+    alignof(Proc(String, String)).should eq 8
+  end
+end
 
 enum Lang
   Crystal
@@ -131,19 +138,21 @@ enum Lang
   Zig
 end
 
-p! sizeof(Lang) # 4 UInt32
-p! alignof(Lang)
-
 enum Color : UInt8
   Red
   Blue
   Green
 end
 
-p! sizeof(Color) # 1 UInt8
-p! alignof(Color)
+describe "Test Enum" do
+  it "Enum (Value Type)" do
+    sizeof(Lang).should eq 4 # 4 UInt32
+    alignof(Lang).should eq 4
 
-# struct (Value Type)
+    sizeof(Color).should eq 1 # 1 UInt8
+    alignof(Color).should eq 1
+  end
+end
 
 struct UserStruct
   @id : UInt32
@@ -154,26 +163,20 @@ struct UserStruct
   end
 end
 
-p! sizeof(UserStruct) # (id 4 + padding 4) + name 8 + (balance 4 + padding 4)
-p! alignof(UserStruct)
-p! offsetof(UserStruct, @id)
-p! offsetof(UserStruct, @name)
-p! offsetof(UserStruct, @balance)
-
-__ "record (Value Type)"
+describe "Test struct" do
+  it "struct (Value Type)" do
+    sizeof(UserStruct).should eq 24 # (id 4 + padding 4) + name 8 + (balance 4 + padding 4)
+    alignof(UserStruct).should eq 8
+    offsetof(UserStruct, @id).should eq 0
+    offsetof(UserStruct, @name).should eq 8
+    offsetof(UserStruct, @balance).should eq 16
+  end
+end
 
 record UserRecord,
   id : UInt32,
   name : String,
   balance : UInt32
-
-p! sizeof(UserRecord) # (id 4 + padding 4) + name 8 + (balance 4 + padding 4)
-p! alignof(UserRecord)
-p! offsetof(UserRecord, @id)
-p! offsetof(UserRecord, @name)
-p! offsetof(UserRecord, @balance)
-
-__ "Packed struct"
 
 @[Packed]
 record UserPackedRecord,
@@ -181,13 +184,23 @@ record UserPackedRecord,
   name : String,
   balance : UInt32
 
-p! sizeof(UserPackedRecord)  # id 4 + name 8 + balance 4
-p! alignof(UserPackedRecord) # 1
-p! offsetof(UserPackedRecord, @id)
-p! offsetof(UserPackedRecord, @name)
-p! offsetof(UserPackedRecord, @balance)
+describe "Test record" do
+  it "record (Value Type)" do
+    sizeof(UserRecord).should eq 24 # (id 4 + padding 4) + name 8 + (balance 4 + padding 4)
+    alignof(UserRecord).should eq 8
+    offsetof(UserRecord, @id).should eq 0
+    offsetof(UserRecord, @name).should eq 8
+    offsetof(UserRecord, @balance).should eq 16
+  end
 
-__ "class (Reference Type)"
+  it "Packed struct" do
+    sizeof(UserPackedRecord).should eq 16 # id 4 + name 8 + balance 4
+    alignof(UserPackedRecord).should eq 1
+    offsetof(UserPackedRecord, @id).should eq 0
+    offsetof(UserPackedRecord, @name).should eq 4
+    offsetof(UserPackedRecord, @balance).should eq 12
+  end
+end
 
 class UserClass
   @id : UInt32
@@ -198,27 +211,29 @@ class UserClass
   end
 end
 
-p! sizeof(UserClass) # ptr
-p! alignof(UserClass)
-p! instance_sizeof(UserClass) # TYPEID 4 + id 4 + name 8 + (balance 4 + padding 4)
-p! instance_alignof(UserClass)
-p! offsetof(UserClass, @id)
-p! offsetof(UserClass, @name)
-p! offsetof(UserClass, @balance)
+describe "Test class" do
+  it "class (Reference Type)" do
+    sizeof(UserClass).should eq 8 # ptr
+    alignof(UserClass).should eq 8
+    instance_sizeof(UserClass).should eq 24 # TYPEID 4 + id 4 + name 8 + (balance 4 + padding 4)
+    instance_alignof(UserClass).should eq 8
+    offsetof(UserClass, @id).should eq 4
+    offsetof(UserClass, @name).should eq 8
+    offsetof(UserClass, @balance).should eq 16
+  end
+end
 
-__ "Pointer (Value Type)"
+describe "Test Pointer" do
+  it "Pointer (Value Type)" do
+    sizeof(Pointer(String)).should eq 8
+    alignof(Pointer(String)).should eq 8
+  end
 
-p! sizeof(Pointer(String))
-p! alignof(Pointer(String))
-
-__ "Slice (Value Type)"
-
-p! sizeof(Slice(String)) # size 4 + ( read_only 1 + padding 3 ) + ptr 8
-p! alignof(Slice(String))
-p! offsetof(Slice(String), @size)
-p! offsetof(Slice(String), @read_only)
-p! offsetof(Slice(String), @pointer)
-
-__ "Proc (Value Type)"
-p! sizeof(Proc(String, String))
-p! alignof(Proc(String, String))
+  it "Slice (Value Type)" do
+    sizeof(Slice(String)).should eq 16 # size 4 + ( read_only 1 + padding 3 ) + ptr 8
+    alignof(Slice(String)).should eq 8
+    offsetof(Slice(String), @size).should eq 0
+    offsetof(Slice(String), @read_only).should eq 4
+    offsetof(Slice(String), @pointer).should eq 8
+  end
+end
