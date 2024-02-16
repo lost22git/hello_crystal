@@ -1,21 +1,25 @@
 require "spec"
 
 describe "Process" do
-  it "`cmd`: inherit stderr and return stdout" do
+  it "`cmd`: inherit stderr and return stdout, $? is set to status" do
     # stderr: "sh: 1: InvalidCmd: not found"
     output = `InvalidCmd`
     output.should eq ""
+    $?.success?.should be_false
 
     output = `crystal`
     output.should_not eq ""
+    $?.success?.should be_true
 
     # stderr: "Error: unknown command: -invalid_param"
     output = `crystal -invalid_param`
     output.should eq ""
+    $?.success?.should be_false
 
     # redirect stderr to stdout
     output = `InvalidCmd 2>&1`
     output.should_not eq ""
+    $?.success?.should be_false
   end
 
   it "Process.run: run cmd and wait it complete" do
