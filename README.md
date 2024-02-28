@@ -116,12 +116,6 @@ class IO_Buffered["IO::Buffered"] {
 }
 link IO_Buffered "https://crystal-lang.org/api/master/IO/Buffered.html"
 
-class Socket_Server["Socket::Server"] {
-  << module >>
-}
-
-link Socket_Server "https://crystal-lang.org/api/master/Socket/Server.html"
-
 class IO_Memory["IO::Memory"] {
   << class >>
 }
@@ -203,6 +197,54 @@ class File {
 }
 link File "https://crystal-lang.org/api/master/File.html"
 
+
+IO <|-- IO_Memory : extends
+IO <|-- String_Builder : extends
+IO <|-- IO_Hexdump : extends
+IO <|-- IO_Sized : extends
+IO <|-- IO_Delimited : extends
+IO <|-- IO_Stapled : extends
+IO <|-- IO_MultiWriter : extends
+IO <|-- IO_Digest : extends
+IO <|-- Compress_Deflate_Reader : extends
+IO <|-- Compress_Deflate_Writer : extends
+IO <|-- Compress_Gzip_Reader : extends
+IO <|-- Compress_Gzip_Writer : extends
+IO <|-- Compress_Zlib_Reader : extends
+IO <|-- Compress_Zlib_Writer : extends
+IO <|-- IO_FileDescriptor : extends
+
+IO_Buffered <|-- Compress_Deflate_Reader : include
+IO_Buffered <|-- Compress_Deflate_Writer : include
+IO_Buffered <|-- Compress_Gzip_Reader : include
+IO_Buffered <|-- Compress_Gzip_Writer : include
+IO_Buffered <|-- Compress_Zlib_Reader : include
+IO_Buffered <|-- Compress_Zlib_Writer : include
+IO_Buffered <|-- IO_FileDescriptor : include
+
+IO_FileDescriptor <|-- File : extends
+```
+
+### Socket
+
+```mermaid
+classDiagram
+
+class IO {
+  << abstract class >>
+}
+link IO "https://crystal-lang.org/api/master/IO.html"
+
+class IO_Buffered["IO::Buffered"] {
+  << module >>
+}
+link IO_Buffered "https://crystal-lang.org/api/master/IO/Buffered.html"
+
+class Socket_Server["Socket::Server"] {
+  << module >>
+}
+link Socket_Server "https://crystal-lang.org/api/master/Socket/Server.html"
+
 class Socket {
   << class >>
 }
@@ -238,10 +280,10 @@ class OpenSSL_SSL_Server["OpenSSL::SSL::Server"] {
 }
 link OpenSSL_SSL_Server "https://crystal-lang.org/api/master/OpenSSL/SSL/Server.html"
 
-class OpenSSL_Socket["OpenSSL::SSL::Socket"] {
+class OpenSSL_SSL_Socket["OpenSSL::SSL::Socket"] {
   << abstract class >>
 }
-link OpenSSL_Socket "https://crystal-lang.org/api/master/OpenSSL/SSL/Socket.html"
+link OpenSSL_SSL_Socket "https://crystal-lang.org/api/master/OpenSSL/SSL/Socket.html"
 
 class OpenSSL_SSL_Socket_Client["OpenSSL::SSL::Socket::Client"] {
   << class >>
@@ -258,40 +300,16 @@ class HTTP_Server_Response["HTTP::Server::Response"] {
 }
 link HTTP_Server_Response "https://crystal-lang.org/api/master/HTTP/Server/Response.html"
 
-
-IO <|-- IO_Memory : extends
-IO <|-- String_Builder : extends
-IO <|-- IO_Hexdump : extends
-IO <|-- IO_Sized : extends
-IO <|-- IO_Delimited : extends
-IO <|-- IO_Stapled : extends
-IO <|-- IO_MultiWriter : extends
-IO <|-- IO_Digest : extends
-IO <|-- Compress_Deflate_Reader : extends
-IO <|-- Compress_Deflate_Writer : extends
-IO <|-- Compress_Gzip_Reader : extends
-IO <|-- Compress_Gzip_Writer : extends
-IO <|-- Compress_Zlib_Reader : extends
-IO <|-- Compress_Zlib_Writer : extends
-IO <|-- IO_FileDescriptor : extends
 IO <|-- Socket : extends
 IO <|-- OpenSSL_SSL_Socket : extends
+IO <|-- HTTP_Server_Response : extends
 
-IO_Buffered <|-- Compress_Deflate_Reader : include
-IO_Buffered <|-- Compress_Deflate_Writer : include
-IO_Buffered <|-- Compress_Gzip_Reader : include
-IO_Buffered <|-- Compress_Gzip_Writer : include
-IO_Buffered <|-- Compress_Zlib_Reader : include
-IO_Buffered <|-- Compress_Zlib_Writer : include
-IO_Buffered <|-- IO_FileDescriptor : include
 IO_Buffered <|-- Socket : include
 IO_Buffered <|-- OpenSSL_SSL_Socket : include
 
 Socket_Server <|-- UNIXServer : include
 Socket_Server <|-- TCPServer : include
 Socket_Server <|-- OpenSSL_SSL_Server : include
-
-IO_FileDescriptor <|-- File : extends
 
 Socket <|-- UNIXSocket : extends
 Socket <|-- IPSocket : extends
