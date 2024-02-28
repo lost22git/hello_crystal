@@ -1,5 +1,13 @@
 #!/usr/bin/env crystal
 
+# - `Iterable(T)#each() : Iterator(T)`
+#
+# - `Iterator(T)#next() : T`
+#
+# - `Iterator(T) include Enumerable(T)`
+#
+# - `Enumerable(T)` is **eager**，`Iterator(T)` is **lazy**
+
 def __(t : String)
   puts ""
   puts "------\e[1;33m " + t + " \e[m" + ("-" * (50 - 8 - t.size))
@@ -21,7 +29,7 @@ __ "skip and first"
   .first(2)
   .each { |i| p i }
 
-__ "min/max/sum/size/join"
+__ "min/max/minmax/sum/size/join"
 
 p! (1..10).each
   .skip(3)
@@ -32,6 +40,11 @@ p! (1..10).each
   .skip(3)
   .first(2)
   .max
+
+p! (1..10).each
+  .skip(3)
+  .first(2)
+  .minmax
 
 p! (1..10).each
   .skip(3)
@@ -69,13 +82,39 @@ __ "compact_map (aka. filter_map)"
   .each { |i| p i }
 
 __ "step"
+
 (1..10).each
   .step(3)
   .each { |i| p i }
 
 __ "slice"
+
 (1..10).each
   .slice(3)
+  .each { |i| p i }
+
+__ "slice_before"
+
+(1..10).each
+  .slice_before { |i| i.even? }
+  .each { |i| p i }
+
+__ "slice_after"
+
+(1..10).each
+  .slice_after { |i| i.even? }
+  .each { |i| p i }
+
+__ "slice_when (simulate silice_after)"
+
+(1..10).each
+  .slice_when { |last, current| last.even? }
+  .each { |i| p i }
+
+__ "slice_when (simulate silice_before)"
+
+(1..10).each
+  .slice_when { |last, current| current.even? }
   .each { |i| p i }
 
 __ "in_groups_of"
