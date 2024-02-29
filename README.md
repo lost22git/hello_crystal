@@ -6,6 +6,7 @@
 - https://www.slideshare.net/crystallanguage/crystal-presentation-at-recurse-center-ny
 - https://lbarasti.com/post/json_beyond_basics
 - https://lbarasti.com/post/select_statement
+- https://github.com/icyleaf/fast-crystal
 
 
 ## Enumerable/Iterable
