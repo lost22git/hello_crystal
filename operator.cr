@@ -6,6 +6,7 @@ describe "Test" do
   it "div / mod" do
     (3 / 2).should eq 1.5
 
+    # div floor
     (3 // 2).should eq 1
     (-3 // -2).should eq 1
     (-3 // 2).should eq -2
@@ -15,6 +16,8 @@ describe "Test" do
     (-3 % -2).should eq -1
     (-3 % 2).should eq 1
     (3 % -2).should eq -1
+
+    3.divmod(2).should eq({1, 1})
   end
 
   it "overflow" do

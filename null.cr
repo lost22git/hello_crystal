@@ -8,7 +8,7 @@
 
 a : String? = "hello"
 p! a
-p! a.try &.upcase
+p! a.try &.upcase.try &.size
 
 a = nil
 p! a
