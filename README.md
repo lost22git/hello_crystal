@@ -8,7 +8,6 @@
 - https://lbarasti.com/post/select_statement
 - https://github.com/icyleaf/fast-crystal
 
-
 ## Enumerable/Iterable
 
 ```mermaid
