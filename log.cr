@@ -1,3 +1,5 @@
+#!/usr/bin/env crystal
+
 require "log"
 
 def __(t : String)
