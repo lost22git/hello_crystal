@@ -31,6 +31,7 @@ p! (Color::Red | Color::Blue).to_s
 p! typeof(Color::Red | Color::Blue)
 p! (Color::Red | Color::Blue).value
 p! (Color::Red | Color::Blue).includes? Color::Blue
+p! Color::Blue.in?(Color::Red | Color::Blue)
 p! (Color::Red | Color::Blue).red?
 
 Color.each do |c, v|

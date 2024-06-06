@@ -82,3 +82,19 @@ end
 block_param3 3 do |i|
   p i
 end
+
+__ "union type param convert to single type"
+
+require "uri"
+
+def fetch(uri : String | URI)
+  p! typeof(uri) # => URI
+
+  if uri.is_a? String
+    uri = URI.parse(uri)
+  end
+
+  p! typeof(uri) # => URI
+end
+
+fetch "https://github.com"

@@ -87,7 +87,7 @@ pp Book.from_json Book.new(
   link: URI.parse("https://book.com/1"),
 ).to_json
 
-pp Book.from_json %(
+pp Book.from_json <<-JSON
 {
   "id": "6bce63d9-7b7f-4493-9530-6fa1d4c1b285",
   "name": "《史记》",
@@ -96,7 +96,7 @@ pp Book.from_json %(
     "red"
   ]
 }
-)
+JSON
 
 __ "JSON::parse and JSON::build"
 
