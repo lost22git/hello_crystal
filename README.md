@@ -324,6 +324,32 @@ OpenSSL_SSL_Socket <|-- OpenSSL_SSL_Socket_Server : extends
 
 ## Fiber
 
+### Resources
+
+- [Fiber](https://github.com/crystal-lang/crystal/blob/master/src/fiber.cr)
+- [Crystal::System::Fiber](https://github.com/crystal-lang/crystal/blob/master/src/crystal/system/fiber.cr)
+- [Fiber::Context](https://github.com/crystal-lang/crystal/blob/master/src/fiber/context.cr)
+- [Crystal::System::Thread](https://github.com/crystal-lang/crystal/blob/master/src/crystal/system/thread.cr)
+- [Crystal::Scheduler](https://github.com/crystal-lang/crystal/blob/master/src/crystal/scheduler.cr)
+- [Crystal::System::EventLoop](https://github.com/crystal-lang/crystal/blob/master/src/crystal/system/event_loop.cr)
+
 ### Scheduler
 
 ![scheduler](./img/scheduler.svg)
+
+### Fiber#enqueue
+
+If the `Fiber` is not bound to a `Thread`, the `Fiber` will be assigned to a `Thread` 
+
+(if `-Dpreview_mt` round-robin else current) and bound to it, finally enqueue it's `Scheduler`.
+
+
+| Method        | Source Fiber                              | Target Fiber       |
+| ------------- | ----------------------------------------- | ------------------ |
+| Fiber#resume  | current suspend forever                   | given by user      | 
+| Fiber.suspend | current suspend forever                   | given by scheduler |
+| Fiber.yield   | current push into scheduler               | given by scheduler |
+| sleep         | current push into scheduler after timeout | given by scheduler |
+| Fiber.timeout | current push into scheduler after timeout | given by scheduler |
+
+
