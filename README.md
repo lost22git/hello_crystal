@@ -321,3 +321,9 @@ TCPSocket <|-- TCPServer : extends
 OpenSSL_SSL_Socket <|-- OpenSSL_SSL_Socket_Client : extends
 OpenSSL_SSL_Socket <|-- OpenSSL_SSL_Socket_Server : extends
 ```
+
+## Fiber
+
+### Scheduler
+
+![scheduler](./img/scheduler.svg)
